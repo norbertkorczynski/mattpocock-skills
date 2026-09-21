@@ -32,6 +32,8 @@ The Spec axis needs a spec to exist and be findable. It looks in this order:
 
 Step 1 depends on `docs/agents/issue-tracker.md`, which [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) writes. Without it the axis still works if you hand it a path. With no spec at all, the Spec sub-agent is skipped and the report says "no spec available" rather than inventing requirements.
 
+When `docs/agents/delivery-workflow.md` exists, the Spec axis reads it too. For an implementation issue with a change request, it checks the required plan traceability, validation evidence, and unresolved discussion state. If the change request has not been opened yet, it reports delivery evidence as pending, not as a defect in the code.
+
 ## The two axes
 
 | | Standards | Spec |

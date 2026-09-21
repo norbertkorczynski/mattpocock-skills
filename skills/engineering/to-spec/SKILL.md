@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.
 
-The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/setup-matt-pocock-skills`.
+The issue tracker, triage label vocabulary, and delivery workflow should have been provided to you. If `docs/agents/delivery-workflow.md` is missing, tell the user to run `/setup-matt-pocock-skills`.
 
 ## Process
 
@@ -16,7 +16,7 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 Check with the user that these seams match their expectations.
 
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Read `docs/agents/delivery-workflow.md` when it exists. Write the spec using the template below, then publish it to the project issue tracker. Preserve every unresolved decision explicitly. Do not apply the `ready-for-agent` triage label to a parent spec unless the repository delivery workflow says that a complete spec is itself ready for implementation.
 
 <spec-template>
 
@@ -27,6 +27,10 @@ The problem that the user is facing, from the user's perspective.
 ## Solution
 
 The solution to the problem, from the user's perspective.
+
+## Source Traceability
+
+The plan, conversation, ADRs, and other decisions this spec preserves.
 
 ## User Stories
 
@@ -64,9 +68,17 @@ A list of testing decisions that were made. Include:
 - Which modules will be tested
 - Prior art for the tests (i.e. similar types of tests in the codebase)
 
+## Verification Expectations
+
+The focused and full checks each implementation issue must run, or the reason a check cannot yet be named.
+
 ## Out of Scope
 
 A description of the things that are out of scope for this spec.
+
+## Unresolved Decisions
+
+Decisions that remain open. Write `None` only when the implementation choices are settled.
 
 ## Further Notes
 

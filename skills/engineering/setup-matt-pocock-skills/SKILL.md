@@ -1,6 +1,6 @@
 ---
 name: setup-matt-pocock-skills
-description: "Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills."
+description: "Configure this repo for the engineering skills: set up its issue tracker, triage labels, delivery workflow, and domain docs. Run once before first use of the other engineering skills."
 disable-model-invocation: true
 ---
 
@@ -10,6 +10,7 @@ Scaffold the per-repo configuration that the engineering skills assume:
 
 - **Issue tracker**: where issues live (GitHub by default; local markdown is also supported out of the box)
 - **Triage labels**: the strings used for the five canonical triage roles
+- **Delivery workflow**: when an issue may begin, how it is delivered, and who may merge it
 - **Domain docs**: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
@@ -60,12 +61,16 @@ The defaults are the five canonical roles, each label string equal to its name: 
 
 Offer **multi-context** (a root `CONTEXT-MAP.md` pointing to per-context `CONTEXT.md` files) only when exploration found monorepo signals. Then confirm which layout they want.
 
+**Section D: Delivery workflow.** Default to one ready implementation issue per branch and change request, with the repository policy defining the evidence and merge authority. Ask whether this default fits or the project needs a different delivery workflow.
+
+The delivery workflow records the tracker control plane. Prefer a tracker-specific MCP integration when it is available; record the native CLI as a fallback for operations the MCP integration does not expose.
+
 ### 3. Confirm and edit
 
 Show the user a draft of:
 
 - The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
-- The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md` (the last only when `triage` is installed)
+- The contents of `docs/agents/issue-tracker.md`, `docs/agents/delivery-workflow.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md` (the last only when `triage` is installed)
 
 Let them edit before writing.
 
@@ -94,6 +99,10 @@ The block:
 
 [one-line summary of the label vocabulary]. See `docs/agents/triage-labels.md`.
 
+### Delivery workflow
+
+[one-line summary of the issue-to-delivery lifecycle]. See `docs/agents/delivery-workflow.md`.
+
 ### Domain docs
 
 [one-line summary of layout: "single-context" or "multi-context"]. See `docs/agents/domain.md`.
@@ -106,6 +115,7 @@ Then write the docs files using the seed templates in this skill folder as a sta
 - [issue-tracker-github.md](./issue-tracker-github.md): GitHub issue tracker
 - [issue-tracker-gitlab.md](./issue-tracker-gitlab.md): GitLab issue tracker
 - [issue-tracker-local.md](./issue-tracker-local.md): local-markdown issue tracker
+- [delivery-workflow.md](./delivery-workflow.md): issue-to-delivery lifecycle
 - [triage-labels.md](./triage-labels.md): label mapping (only if `triage` is installed)
 - [domain.md](./domain.md): domain doc consumer rules + layout
 
@@ -113,4 +123,4 @@ For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch us
 
 ### 5. Done
 
-Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-running this skill is only necessary if they want to switch issue trackers or restart from scratch.
+Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-running this skill is only necessary if they want to switch issue trackers, change the delivery workflow, or restart from scratch.

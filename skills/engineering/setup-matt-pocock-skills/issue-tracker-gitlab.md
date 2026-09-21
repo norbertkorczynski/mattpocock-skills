@@ -1,6 +1,6 @@
 # Issue tracker: GitLab
 
-Issues and specs for this repo live as GitLab issues. Use the [`glab`](https://gitlab.com/gitlab-org/cli) CLI for all operations.
+Issues and specs for this repo live as GitLab issues. Use the GitLab MCP integration as the primary control plane. Use the [`glab`](https://gitlab.com/gitlab-org/cli) CLI only for an operation the MCP integration does not expose.
 
 ## Conventions
 
@@ -28,11 +28,11 @@ Unlike GitHub, GitLab numbers issues and MRs separately, so `#42` is unambiguous
 
 ## When a skill says "publish to the issue tracker"
 
-Create a GitLab issue.
+Create a GitLab issue through MCP.
 
 ## When a skill says "fetch the relevant ticket"
 
-Run `glab issue view <number> --comments`.
+Read the GitLab issue and its discussions through MCP. Use `glab issue view <number> --comments` only as the fallback.
 
 ## Wayfinding operations
 

@@ -1,6 +1,6 @@
 ## What it does
 
-`setup-matt-pocock-skills` answers three questions about one repo: where issues live, what the triage labels are called, and where the domain docs sit. It records the answers as markdown files under `docs/agents/`.
+`setup-matt-pocock-skills` answers four questions about one repo: where issues live, what the triage labels are called, how a ready issue is delivered, and where the domain docs sit. It records the answers as markdown files under `docs/agents/`.
 
 Those files are the only thing that varies between repos. The skills themselves are identical everywhere; they read `docs/agents/issue-tracker.md` at run time and do what it says. That is why the set is not tied to GitHub, and why no skill file ever needs editing to point it somewhere else. Invoking it with "link the skills to a custom issue tracker" works with anything you can connect to programmatically, with zero changes to the skills.
 
@@ -21,11 +21,12 @@ It writes into the repo you run it in:
 | `issue-tracker.md` | `docs/agents/` |
 | `domain.md` | `docs/agents/` |
 | `triage-labels.md` | `docs/agents/`, only when the `triage` skill is installed |
+| `delivery-workflow.md` | `docs/agents/` |
 | An `## Agent skills` block | whichever of `CLAUDE.md` / `AGENTS.md` already exists |
 
 All of it is committed markdown. There is no user-level or global mode: the config lives in the repo, so every repo gets its own copy.
 
-## The three decisions
+## The four decisions
 
 It leads each section with the recommended answer, and skips whatever exploration already settled. Most runs are two confirmations and done.
 
@@ -33,14 +34,15 @@ It leads each section with the recommended answer, and skips whatever exploratio
 | --- | --- | --- |
 | **Issue tracker** | the one matching your `git remote` | always: this is the one real choice |
 | **Triage labels** | keep the five canonical names (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`) | only if the `triage` skill is installed |
+| **Delivery workflow** | one ready implementation issue per branch and change request | always: the repository decides what authorizes a merge |
 | **Domain docs** | single-context: one `CONTEXT.md` plus `docs/adr/` at the root | only if it spots monorepo signals, and then it offers a multi-context `CONTEXT-MAP.md` |
 
 The tracker options:
 
 | Option | Where issues live | Needs |
 | --- | --- | --- |
-| **GitHub** | the repo's GitHub Issues | the `gh` CLI |
-| **GitLab** | the repo's GitLab Issues | the `glab` CLI |
+| **GitHub** | the repo's GitHub Issues | its MCP integration when available, otherwise the `gh` CLI |
+| **GitLab** | the repo's GitLab Issues | its MCP integration when available, otherwise the `glab` CLI |
 | **Local markdown** | files under `.scratch/<feature>/` in this repo | nothing: no remote at all |
 | **Other** | wherever you say | one paragraph from you describing the workflow |
 
@@ -71,7 +73,7 @@ It doesn't. `docs/agents/triage-labels.md` is a *mapping*: it tells `/triage` wh
 
 **Can I configure the other skills' behaviour here ([grilling](https://www.aihero.dev/ai-coding-dictionary/grilling) cadence, question format, tone)?**
 
-No. It configures three things: tracker, labels, doc layout. There have been direct requests to make it the home for per-user preferences, and the standing answer is that skills stay opinionated: *"Config is death."* Preferences belong in your `CLAUDE.md` as plain instructions, which every skill already reads.
+Only the delivery lifecycle joins tracker, labels, and doc layout here. The workflow answers how an implementation issue becomes a merged change. Per-user preferences such as [grilling](https://www.aihero.dev/ai-coding-dictionary/grilling) cadence, question format, and tone still belong in your `CLAUDE.md` as plain instructions.
 
 **Can I keep the config in `~/.claude` instead of committing it to every repo?**
 
@@ -83,10 +85,10 @@ One long-standing complaint says yes, in these words: *"having a skill to set up
 
 ## It's working if
 
-- `docs/agents/issue-tracker.md` and `docs/agents/domain.md` exist, plus `triage-labels.md` if `triage` is installed.
+- `docs/agents/issue-tracker.md`, `docs/agents/delivery-workflow.md`, and `docs/agents/domain.md` exist, plus `triage-labels.md` if `triage` is installed.
 - An `## Agent skills` section appears in the instruction file your harness actually reads, with a one-line summary pointing at each of those files.
 - The tracker it proposed matches the remote you really use, and the label strings match labels that really exist in your tracker.
-- Afterwards, `/to-tickets` publishes without asking you where issues live, and `/triage` applies labels rather than inventing them.
+- Afterwards, `/to-tickets` publishes complete ready issues, `/implement` follows the repository delivery workflow, and `/triage` applies labels rather than inventing them.
 - Nothing in the skill files themselves changed. If setup edited a `SKILL.md`, something went wrong.
 
 ## Where it fits

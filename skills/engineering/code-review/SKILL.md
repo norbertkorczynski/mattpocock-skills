@@ -31,6 +31,8 @@ Look for the originating spec, in this order:
 3. A spec file under `docs/`, `specs/`, or `.scratch/` matching the branch name or feature.
 4. If nothing is found, ask the user where the spec is. If they say there isn't one, the **Spec** sub-agent will skip and report "no spec available".
 
+Read `docs/agents/delivery-workflow.md` when it exists. For an implementation issue, use it to identify required plan traceability, validation evidence, and change-request discussion status. If a change request exists, fetch its description and discussions through the configured tracker workflow. Missing required delivery evidence is a Spec finding. If no change request exists yet, report delivery evidence as pending rather than as a defect in the code.
+
 ### 3. Identify the standards sources
 
 Anything in the repo that documents how code should be written, such as `CODING_STANDARDS.md` or `CONTRIBUTING.md`.
@@ -67,7 +69,8 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 - The diff command and commit list.
 - The path or fetched contents of the spec.
-- The brief: "Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong. Quote the spec line for each finding. Under 400 words."
+- The delivery workflow and any fetched change-request description and discussions.
+- The brief: "Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong; and (d) missing required delivery evidence or unresolved change-request discussions. Quote the spec or delivery-policy line for each finding. Treat delivery evidence as pending, not defective, when no change request exists. Under 400 words."
 
 If the spec is missing, skip the Spec sub-agent and note this in the final report.
 

@@ -8,13 +8,15 @@ disable-model-invocation: true
 
 Break a plan, spec, or conversation into a set of **tickets**: tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/setup-matt-pocock-skills`.
+The issue tracker, triage label vocabulary, and delivery workflow should have been provided to you. If `docs/agents/delivery-workflow.md` is missing, tell the user to run `/setup-matt-pocock-skills`.
 
 ## Process
 
 ### 1. Gather context
 
 Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.
+
+Read `docs/agents/delivery-workflow.md`. Its Definition Of Ready decides which information every implementation issue must contain and when the ready-for-agent triage role may be applied.
 
 ### 2. Explore the codebase (optional)
 
@@ -57,10 +59,10 @@ Iterate until the user approves the breakdown.
 
 ### 5. Publish the tickets to the configured tracker
 
-Publish the approved tickets. **How** depends on the tracker `/setup-matt-pocock-skills` configured; the tickets are the same either way, only the shape of the blocking edges changes:
+Before publishing, check every issue against the repository's Definition Of Ready. An issue with an unresolved implementation decision is not ready for agent work. Publish the approved tickets. **How** depends on the tracker `/setup-matt-pocock-skills` configured; the tickets are the same either way, only the shape of the blocking edges changes:
 
 - **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-ticket file template below: one ticket per file, never a single combined file.
-- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise; the tickets are agent-grabbable by construction.
+- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the ready-for-agent triage label only after the issue meets the repository's Definition Of Ready.
 
 Work the **frontier**: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.
 
@@ -70,9 +72,26 @@ Do NOT close or modify any parent issue.
 
 # <NN>: <Ticket title>
 
+## Plan Traceability
+
+- <source heading or decision>
+
 **What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
 
 **Blocked by:** the numbers/titles of the tickets that gate this one, or "None (can start immediately)".
+
+## Non-goals
+
+- <nearby work intentionally excluded>
+
+## Verification
+
+- Focused: <check>
+- Full: <check>
+
+## Unresolved Decisions
+
+- None
 
 **Status:** ready-for-agent
 
@@ -87,6 +106,10 @@ Do NOT close or modify any parent issue.
 
 A reference to the parent issue on the tracker (if the source was an existing issue, otherwise omit this section).
 
+## Plan Traceability
+
+- A reference to each applicable plan, spec, or ADR heading.
+
 ## What to build
 
 The end-to-end behaviour this ticket makes work, from the user's perspective, not layer-by-layer implementation.
@@ -95,6 +118,19 @@ The end-to-end behaviour this ticket makes work, from the user's perspective, no
 
 - [ ] Criterion 1
 - [ ] Criterion 2
+
+## Non-goals
+
+- Nearby work intentionally excluded.
+
+## Verification
+
+- Focused: the behavior-scoped check.
+- Full: the project-wide check.
+
+## Unresolved Decisions
+
+- `None`, or the decision that prevents implementation.
 
 ## Blocked by
 

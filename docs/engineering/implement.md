@@ -1,6 +1,6 @@
 ## What it does
 
-`implement` builds work that has already been decided. You point it at a [ticket](https://www.aihero.dev/ai-coding-dictionary/ticket), a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), or the plan you just agreed in the conversation, and it writes the code, drives [tdd](https://aihero.dev/skills-tdd) at the seams, typechecks as it goes, runs [code-review](https://aihero.dev/skills-code-review) at the end, and commits to the current branch.
+`implement` builds work that has already been decided. You point it at a [ticket](https://www.aihero.dev/ai-coding-dictionary/ticket), a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), or the plan you just agreed in the conversation, and it writes the code, drives [tdd](https://aihero.dev/skills-tdd) at the seams, typechecks as it goes, reviews the committed diff, and follows the repository's delivery workflow through the linked change request.
 
 It never reopens the plan. There is no interview, no clarifying round, no proposal of a different approach. Whatever was settled upstream is the input, and the skill's whole job is to turn that into a commit. That is what separates it from typing "build this" at a fresh [agent](https://www.aihero.dev/ai-coding-dictionary/agent), which will happily redesign the work while it builds it.
 
@@ -24,19 +24,20 @@ The same-session case is worth naming because the skill's own first line doesn't
 
 ## Prerequisites
 
-`implement` commits to the branch you are on. It does not create one, and it does not ask. Check you are on the branch you want the work on before you start.
+`implement` reads `docs/agents/delivery-workflow.md` before it changes code. That policy decides whether the issue is ready, which branch and change-request lifecycle applies, what evidence is required, and whether an agent may merge. It does not treat a commit as the universal end of delivery.
 
 If the tickets came from [to-tickets](https://aihero.dev/skills-to-tickets), the tracker they live on was configured by [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills). `code-review` reads the same configuration to find the originating spec at close-out.
 
 ## What one run does
 
-A run is five beats, in order:
+A run follows the repository delivery workflow. Its usual beats are:
 
-1. Read the ticket or spec and work out the seams.
-2. Drive [tdd](https://aihero.dev/skills-tdd) at the pre-agreed seams, one red-green slice at a time.
-3. Typecheck often, run single test files as it goes.
-4. Run the full test suite once, at the end.
-5. Run [code-review](https://aihero.dev/skills-code-review), then commit to the current branch.
+1. Read the delivery policy and verify that the issue meets its Definition Of Ready.
+2. Create the required branch and change request.
+3. Drive [tdd](https://aihero.dev/skills-tdd) at the pre-agreed seams, one red-green slice at a time.
+4. Typecheck often, run single test files as it goes, then run the full suite.
+5. Commit, then run [code-review](https://aihero.dev/skills-code-review) against a fixed point that includes the implementation.
+6. Record traceability, validation, review outcome, and deviations. Resolve every discussion, then merge only if the policy authorizes it.
 
 One run covers one ticket. The tickets [to-tickets](https://aihero.dev/skills-to-tickets) produces are tracer-bullet vertical slices sized to fit a single fresh [context window](https://www.aihero.dev/ai-coding-dictionary/context-window), so the intended rhythm is: clear context, implement one ticket, commit, clear again. Each ticket is self-contained, which is what makes the previous ticket's context disposable.
 
@@ -50,7 +51,7 @@ The word "pre-agreed" is doing real work, and it is also the skill's weakest joi
 
 **It finished, but my ticket is still open and the acceptance criteria are still unchecked.**
 
-Correct, and expected. `implement` has no completion step. It ends at the commit and never touches the work item, confirmed on GitHub Issues and on the local markdown tracker, so it is not a tracker integration problem. It also does not act on the findings `code-review` produced, and does not tick the `- [ ]` boxes on the originating issue. Close the ticket and reconcile the criteria yourself. This bites hardest on a dependency chain, because `to-tickets` defines the frontier as tickets whose blockers are all closed. If nothing gets closed, nothing ever becomes visibly unblocked.
+That is a delivery-workflow failure. `implement` must record the evidence required by the repository policy, resolve review discussions, and verify the change request closes the issue after merge. If a required check or decision remains unresolved, it takes the policy's human-intervention path instead of claiming completion.
 
 **Can I point it at all my tickets at once, or run several in parallel?**
 
@@ -58,11 +59,11 @@ No. One invocation, one ticket. Batch dispatch across a ticket queue and [subage
 
 **Can it open a pull request instead of committing?**
 
-Not built in. It commits straight to the current branch, which several people find too eager: the code lands before they have had a chance to verify it works. There is no configuration flag and no PR mode. People override it in the invocation ("commit to a branch and open a PR") or by editing their local copy of the skill.
+Yes, when the repository delivery workflow requires a change request. The workflow is the configuration point, not an invocation-level preference. It also decides whether the agent may merge or must stop with a review-ready change request.
 
 **`code-review` says it cannot see my changes.**
 
-`code-review` reviews `git diff <fixed-point>...HEAD`, which excludes staged and working-tree changes. `implement` runs it before committing, so unless an interim commit already exists there is nothing in that diff to review. Multiple people have reported this and it is unfixed on both sides. Commit first, then review against the point you branched from.
+`code-review` reviews `git diff <fixed-point>...HEAD`, which excludes staged and working-tree changes. `implement` commits before review so the fixed-point diff contains the work. Review against the point you branched from, then record and resolve the outcome in the change request.
 
 Separately, some people deliberately do not want the review inside the run at all, because an agent reviewing the code it just wrote is biased toward its own solution. Running [code-review](https://aihero.dev/skills-code-review) in a fresh session against a fixed point is a legitimate alternative, and is the same reason that skill runs its two axes in separate sub-agents.
 
@@ -79,7 +80,7 @@ Probably the ticket is too big rather than the skill being misused. A run does c
 - The session opens by reading the ticket or spec and restating what it will build, rather than asking you what to build.
 - You can see an actual `/tdd` invocation in the trace, not just tests appearing in the diff.
 - Typechecks and single test files run repeatedly during the run, and the full suite runs once near the end.
-- The run reaches a commit on your current branch without you prompting it to carry on.
+- The run follows the repository delivery workflow through its configured branch and change-request lifecycle.
 - The diff is one ticket's worth of change: a vertical slice through every layer, not several tickets swept together.
 
 ## Where it fits
