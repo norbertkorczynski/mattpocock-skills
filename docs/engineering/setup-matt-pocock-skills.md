@@ -42,7 +42,7 @@ The tracker options:
 | Option | Where issues live | Needs |
 | --- | --- | --- |
 | **GitHub** | the repo's GitHub Issues | its MCP integration when available, otherwise the `gh` CLI |
-| **GitLab** | the repo's GitLab Issues | its MCP integration when available, otherwise the `glab` CLI |
+| **GitLab** | the repo's GitLab Issues | the `gitlab-mcp` gateway and its MCP-bound operator subagent |
 | **Local markdown** | files under `.scratch/<feature>/` in this repo | nothing: no remote at all |
 | **Other** | wherever you say | one paragraph from you describing the workflow |
 

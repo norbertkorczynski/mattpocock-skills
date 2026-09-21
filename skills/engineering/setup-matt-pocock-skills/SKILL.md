@@ -43,7 +43,7 @@ Lead each section with the recommended answer so the user can accept it in a wor
 Default posture: these skills were designed for GitHub. If a `git remote` points at GitHub, propose that. If a `git remote` points at GitLab (`gitlab.com` or a self-hosted host), propose GitLab. Otherwise (or if the user prefers), offer:
 
 - **GitHub**: issues live in the repo's GitHub Issues (uses the `gh` CLI)
-- **GitLab**: issues live in the repo's GitLab Issues (uses the [`glab`](https://gitlab.com/gitlab-org/cli) CLI)
+- **GitLab**: issues live in the repo's GitLab Issues (uses the `gitlab-mcp` gateway)
 - **Local markdown**: issues live as files under `.scratch/<feature>/` in this repo (good for solo projects or repos without a remote)
 - **Other** (Jira, Linear, etc.): ask the user to describe the workflow in one paragraph; the skill will record it as freeform prose
 
@@ -63,7 +63,7 @@ Offer **multi-context** (a root `CONTEXT-MAP.md` pointing to per-context `CONTEX
 
 **Section D: Delivery workflow.** Default to one ready implementation issue per branch and change request, with the repository policy defining the evidence and merge authority. Ask whether this default fits or the project needs a different delivery workflow.
 
-The delivery workflow records the tracker control plane. Prefer a tracker-specific MCP integration when it is available; record the native CLI as a fallback for operations the MCP integration does not expose.
+The delivery workflow records the tracker control plane. For GitLab, configure the `gitlab-mcp` gateway, which delegates every GitLab operation to its MCP-bound operator subagent. Do not configure a direct CLI fallback.
 
 ### 3. Confirm and edit
 

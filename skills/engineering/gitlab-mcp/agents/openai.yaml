@@ -1,0 +1,3 @@
+interface:
+  display_name: "GitLab MCP"
+  short_description: "Route GitLab work through an MCP operator"

@@ -2,7 +2,7 @@
 
 ## Control Plane
 
-Use the tracker-specific MCP integration when it is available. Use the tracker CLI only for an operation the MCP integration does not expose, and record the fallback when it changes delivery state.
+Use the control plane named in `docs/agents/issue-tracker.md`. For GitLab, the `gitlab-mcp` gateway owns transport selection and returns the operation receipt.
 
 ## Definition Of Ready
 
